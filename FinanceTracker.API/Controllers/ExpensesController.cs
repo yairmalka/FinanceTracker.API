@@ -19,7 +19,7 @@ namespace FinanceTracker.API.Controllers
             this.expenseRepository = expenseRepository;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> CreateExpense(CreateExpenseRequestDto request)
         {
             var expense = new Expense
