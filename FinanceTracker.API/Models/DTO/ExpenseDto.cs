@@ -12,5 +12,19 @@ namespace FinanceTracker.API.Models.DTO
         public string ReceiptImageUrl { get; set; }
         public string Currency { get; set; }
         public string Location { get; set; }
+
+
+        public ExpenseDto(Expense expense)
+        {
+            Id = expense.Id;
+            DateOfExpense = expense.DateOfExpense;
+            Amount = expense.Amount;
+            Category = expense.Category;
+            ReceiptImageUrl = expense.ReceiptImageUrl;
+            Currency = expense.Currency;
+            Location = expense.Location;
+        }
+
+
     }
 }

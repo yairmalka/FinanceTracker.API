@@ -1,4 +1,6 @@
-﻿namespace FinanceTracker.API.Models.Domain
+﻿using FinanceTracker.API.Models.DTO;
+
+namespace FinanceTracker.API.Models.Domain
 {
     public class Expense
     {
@@ -12,4 +14,6 @@
         public string Location { get; set; }   
 
     }
+
+ 
 }

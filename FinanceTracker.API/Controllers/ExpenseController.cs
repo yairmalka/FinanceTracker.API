@@ -10,11 +10,11 @@ namespace FinanceTracker.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExpensesController : ControllerBase
+    public class ExpenseController : ControllerBase
     {
         private readonly IExpenseRepository expenseRepository;
 
-        public ExpensesController(IExpenseRepository expenseRepository)
+        public ExpenseController(IExpenseRepository expenseRepository)
         {
             this.expenseRepository = expenseRepository;
         }
@@ -34,17 +34,9 @@ namespace FinanceTracker.API.Controllers
 
              await expenseRepository.CreateAsync(expense);
 
-            var response = new ExpenseDto
-            {
-                Id = expense.Id,
-                DateOfExpense = expense.DateOfExpense,
-                Amount = expense.Amount,
-                Category = expense.Category,
-                ReceiptImageUrl = expense.ReceiptImageUrl,
-                Currency = expense.Currency,
-                Location = expense.Location
-            };
-            return Ok(response);
+            var responseExpense = new ExpenseDto(expense);
+
+            return Ok(responseExpense);
         }
 
 

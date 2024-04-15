@@ -19,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
 });
 
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IIncomeRepository, IncomeRepository>();
 
 var app = builder.Build();
 
