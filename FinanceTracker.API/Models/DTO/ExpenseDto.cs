@@ -4,7 +4,7 @@ namespace FinanceTracker.API.Models.DTO
 {
     public class ExpenseDto
     {
-        public Guid Id { get; set; }
+        public Guid ExpenseId { get; set; }
         public DateTime DateOfExpense { get; set; }
         public decimal Amount { get; set; }
         public string Category { get; set; }
@@ -16,7 +16,7 @@ namespace FinanceTracker.API.Models.DTO
 
         public ExpenseDto(Expense expense)
         {
-            Id = expense.Id;
+            ExpenseId = expense.ExpenseId;
             DateOfExpense = expense.DateOfExpense;
             Amount = expense.Amount;
             Category = expense.Category;

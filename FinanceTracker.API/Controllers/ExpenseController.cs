@@ -35,7 +35,7 @@ namespace FinanceTracker.API.Controllers
             {
                 await expenseRepository.CreateAsync(expense);
                 var responseExpense = new ExpenseDto(expense);
-                return Created("api/Expense/" + responseExpense.Id, responseExpense);
+                return Created("api/Expense/" + responseExpense.ExpenseId, responseExpense);
             }
             catch (Exception ex) { 
                 return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);

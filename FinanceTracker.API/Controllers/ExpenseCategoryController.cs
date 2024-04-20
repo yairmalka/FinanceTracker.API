@@ -31,11 +31,11 @@ namespace FinanceTracker.API.Controllers
                 
                 var responseExpenseCategory = new ExpenseCategoryDto
                 {
-                    Id = expenseCategory.Id,
+                    ExpenseCategoryId = expenseCategory.ExpenseCategoryId,
                     CategoryExpenseName = expenseCategory.CategoryExpenseName
                 };
 
-                return Created("api/ExpenseCategory/" + expenseCategory.Id, responseExpenseCategory);
+                return Created("api/ExpenseCategory/" + expenseCategory.ExpenseCategoryId, responseExpenseCategory);
 
             }
             catch (Exception ex)

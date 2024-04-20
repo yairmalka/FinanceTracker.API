@@ -36,7 +36,7 @@ namespace FinanceTracker.API.Controllers
             {
                 await incomeRepository.AddIncomeAsync(income);
                 var incomeDtoResponse = new IncomeDto(income);
-                return Created("api/Income/" + incomeDtoResponse.Id, incomeDtoResponse);
+                return Created("api/Income/" + incomeDtoResponse.IncomeId, incomeDtoResponse);
             }
 
             catch(Exception ex) {
