@@ -31,12 +31,15 @@ namespace FinanceTracker.API.Controllers
                 Currency = request.Currency,
                 Location = request.Location
             };
-
-             await expenseRepository.CreateAsync(expense);
-
-            var responseExpense = new ExpenseDto(expense);
-
-            return Ok(responseExpense);
+            try
+            {
+                await expenseRepository.CreateAsync(expense);
+                var responseExpense = new ExpenseDto(expense);
+                return Created("api/Expense/" + responseExpense.Id, responseExpense);
+            }
+            catch (Exception ex) { 
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
+            }
         }
 
 

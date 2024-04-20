@@ -12,6 +12,11 @@ namespace FinanceTracker.API.Controllers
     {
         private readonly IIncomeRepository incomeRepository;
 
+        public IncomeController(IIncomeRepository incomeRepository)
+        {
+            this.incomeRepository = incomeRepository;
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddIncome(AddIncomeRequestDto request)
         {
@@ -27,12 +32,16 @@ namespace FinanceTracker.API.Controllers
                 Status = request.Status,
                 Notes = request.Notes
             };
+            try
+            {
+                await incomeRepository.AddIncomeAsync(income);
+                var incomeDtoResponse = new IncomeDto(income);
+                return Created("api/Income/" + incomeDtoResponse.Id, incomeDtoResponse);
+            }
 
-            await incomeRepository.AddIncomeAsync(income);
-
-            var IncomeDto = new IncomeDto(income);
-
-            return Ok(IncomeDto);
+            catch(Exception ex) {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }
