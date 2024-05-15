@@ -1,6 +1,7 @@
 ﻿using FinanceTracker.API.Models.Domain;
 using FinanceTracker.API.Models.DTO;
 using FinanceTracker.API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

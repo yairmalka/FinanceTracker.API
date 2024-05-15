@@ -6,16 +6,14 @@ namespace FinanceTracker.API.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             
         }
 
         public DbSet<Expense> Expenses { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Income> Incomes { get; set; }
         public DbSet<ExpenseCategory> expenseCategories { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<SavingGoal> savingGoals { get; set; }
 
 

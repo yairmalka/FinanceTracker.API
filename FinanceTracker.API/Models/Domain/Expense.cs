@@ -9,9 +9,6 @@ namespace FinanceTracker.API.Models.Domain
         [Key]
         public Guid ExpenseId { get; set; }
         public Guid UserId { get; set; }
-        
-        [ForeignKey("UserId")]
-        public User User { get; set; }
         public Guid ExpenseCategoryId { get; set; }
         [ForeignKey("ExpenseCategoryId")]
         public ExpenseCategory ExpenseCategory { get; set; }

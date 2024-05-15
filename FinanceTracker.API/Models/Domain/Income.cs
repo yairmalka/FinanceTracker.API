@@ -8,8 +8,6 @@ namespace FinanceTracker.API.Models.Domain
         [Key]
         public Guid IncomeId { get; set; }
         public Guid UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
         public string Source { get; set; }
         public decimal Amount { get; set; }
         public string Frequency { get; set; }
