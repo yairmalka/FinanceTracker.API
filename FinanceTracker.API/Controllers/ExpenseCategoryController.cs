@@ -28,12 +28,8 @@ namespace FinanceTracker.API.Controllers
             try
             {
                 await expenseCategoryRepository.AddExpenseCategoryAsync(expenseCategory);
-                
-                var responseExpenseCategory = new ExpenseCategoryDto
-                {
-                    ExpenseCategoryId = expenseCategory.ExpenseCategoryId,
-                    CategoryExpenseName = expenseCategory.CategoryExpenseName
-                };
+
+                var responseExpenseCategory = new ExpenseCategoryDto(expenseCategory);
 
                 return Created("api/ExpenseCategory/" + expenseCategory.ExpenseCategoryId, responseExpenseCategory);
 
@@ -43,6 +39,48 @@ namespace FinanceTracker.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllExpenseCategoriesAsync()
+        {
+            try
+            {
+                var expenseCategories = await expenseCategoryRepository.GetAllExpenseCategoriesAsync();
+                var response = new List<ExpenseCategoryDto>();
+
+                foreach(var expenseCategory in expenseCategories)
+                {
+                    response.Add(new ExpenseCategoryDto(expenseCategory));
+                }
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
+            }
+
+        }
+
+
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetExpenseCategoryByIdAsync(Guid id)
+        {
+            try
+            {
+                ExpenseCategory? response = await expenseCategoryRepository.GetExpenseCategoryByIdAsync(id);
+
+                if (response == null)
+                    return null;
+
+
+                return Ok(new ExpenseCategoryDto(response));
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,e.Message);
+            }
         }
     }
 }

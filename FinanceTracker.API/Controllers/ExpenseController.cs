@@ -5,6 +5,8 @@ using FinanceTracker.API.Models;
 using FinanceTracker.API.Models.Domain;
 using FinanceTracker.API.Data;
 using FinanceTracker.API.Repositories.Interface;
+using System.Reflection.Metadata.Ecma335;
+using System.Linq.Expressions;
 
 namespace FinanceTracker.API.Controllers
 {
@@ -24,12 +26,13 @@ namespace FinanceTracker.API.Controllers
         {
             var expense = new Expense
             {
+                ExpenseCategory = request.ExpenseCategory,
                 DateOfExpense = request.DateOfExpense,
                 Amount = request.Amount,
-                Category = request.Category,
                 ReceiptImageUrl = request.ReceiptImageUrl,
                 Currency = request.Currency,
                 Location = request.Location
+
             };
             try
             {
@@ -42,8 +45,46 @@ namespace FinanceTracker.API.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllExpensesAsync()
+        {
+            try
+            {
+                var expenses = await expenseRepository.GetAllExpensesAsync();
+                var response = new List<ExpenseDto>();
+
+                foreach(var expense in expenses)
+                {
+                    response.Add(new ExpenseDto(expense));
+                }
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
 
 
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> GetExpenseByIdAsync(Guid id)
+        {
+            try
+            {
+                var response = await expenseRepository.GetExpenseByIdAsync(id);
+
+                if (response == null)
+                    return null;
+
+                return Ok(new ExpenseDto(response));
+            }
+            catch(Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
 
     }
 }

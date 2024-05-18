@@ -4,6 +4,7 @@ using FinanceTracker.API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Common;
 
 namespace FinanceTracker.API.Controllers
 {
@@ -41,6 +42,46 @@ namespace FinanceTracker.API.Controllers
             }
 
             catch(Exception ex) {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllIncomesAsync()
+        {
+            try
+            {
+                var incomes = await incomeRepository.GetAllIncomesAsync();
+                var response = new List<IncomeDto>();
+
+                foreach(var income in incomes)
+                {
+                    response.Add(new IncomeDto(income));
+                }
+                return Ok(response);
+            }
+
+            catch(Exception ex) 
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+                    }
+        }
+
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetIncomeByIdAsync(Guid id)
+        {
+            try
+            {
+                Income? response = await incomeRepository.GetIncomeByIdAsync(id);
+
+                if (response == null)
+                    return null;
+
+                return Ok(new IncomeDto(response));
+            }
+            catch(Exception ex)
+            {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }

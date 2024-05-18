@@ -13,8 +13,8 @@ namespace FinanceTracker.API.Data
 
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Income> Incomes { get; set; }
-        public DbSet<ExpenseCategory> expenseCategories { get; set; }
-        public DbSet<SavingGoal> savingGoals { get; set; }
+        public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
+        public DbSet<SavingGoal> SavingGoals { get; set; }
 
 
 

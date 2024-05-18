@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FinanceTracker.API.Models.DTO;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceTracker.API.Models.Domain
@@ -11,5 +12,9 @@ namespace FinanceTracker.API.Models.Domain
         public long TargetAmount { get; set;}
         public long CurrentAmount { get; set;}
         public DateTime TargetDate { get; set; }
+
+
     }
+
+   
 }

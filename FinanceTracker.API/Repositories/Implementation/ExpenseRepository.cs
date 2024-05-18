@@ -20,5 +20,15 @@ namespace FinanceTracker.API.Repositories.Implementation
             
             return expense;
         }
+
+        async Task<IEnumerable<Expense>> IExpenseRepository.GetAllExpensesAsync()
+        {
+            return await dbContext.Expenses.ToListAsync();
+        }
+
+        public async Task<Expense?> GetExpenseByIdAsync(Guid id)
+        {
+            return await dbContext.Expenses.FirstOrDefaultAsync(e => e.ExpenseId == id);
+        }
     }
 }

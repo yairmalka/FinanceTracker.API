@@ -15,9 +15,19 @@ namespace FinanceTracker.API.Repositories.Implementation
         }
         public async Task<ExpenseCategory> AddExpenseCategoryAsync(ExpenseCategory expenseCategory)
         {
-            await dbContext.expenseCategories.AddAsync(expenseCategory);
+            await dbContext.ExpenseCategories.AddAsync(expenseCategory);
             await dbContext.SaveChangesAsync();
             return expenseCategory;
+        }
+
+        async Task<IEnumerable<ExpenseCategory>> IExpenseCategoryRepository.GetAllExpenseCategoriesAsync()
+        {
+            return await dbContext.ExpenseCategories.ToListAsync();
+        }
+
+        async Task<ExpenseCategory?> IExpenseCategoryRepository.GetExpenseCategoryByIdAsync(Guid id)
+        {
+            return await dbContext.ExpenseCategories.FirstOrDefaultAsync(ec => ec.ExpenseCategoryId == id);
         }
     }
 }
