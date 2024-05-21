@@ -7,6 +7,7 @@ using FinanceTracker.API.Data;
 using FinanceTracker.API.Repositories.Interface;
 using System.Reflection.Metadata.Ecma335;
 using System.Linq.Expressions;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceTracker.API.Controllers
 {
@@ -26,7 +27,7 @@ namespace FinanceTracker.API.Controllers
         {
             var expense = new Expense
             {
-                ExpenseCategory = request.ExpenseCategory,
+                ExpenseCategoryId = request.ExpenseCategoryId,
                 DateOfExpense = request.DateOfExpense,
                 Amount = request.Amount,
                 ReceiptImageUrl = request.ReceiptImageUrl,
@@ -76,7 +77,7 @@ namespace FinanceTracker.API.Controllers
                 var response = await expenseRepository.GetExpenseByIdAsync(id);
 
                 if (response == null)
-                    return null;
+                    return NotFound();
 
                 return Ok(new ExpenseDto(response));
             }
@@ -86,5 +87,33 @@ namespace FinanceTracker.API.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> EditExpense(Guid id, EditExpenseRequestDto request)
+        {
+            var expense = new Expense
+            {
+                ExpenseId = id,
+                ExpenseCategoryId = request.ExpenseCategoryId,
+                DateOfExpense = request.DateOfExpense,
+                Amount = request.Amount,
+                ReceiptImageUrl = request.ReceiptImageUrl,
+                Currency = request.Currency,
+                Location = request.Location
+            };
+            try { 
+            expense = await expenseRepository.EditExpense(expense);
+
+            if (expense == null)
+                return NotFound();
+
+            return Ok(new ExpenseDto(expense));
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+  
+        }
     }
 }

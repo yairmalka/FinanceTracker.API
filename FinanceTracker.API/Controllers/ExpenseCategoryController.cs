@@ -49,15 +49,15 @@ namespace FinanceTracker.API.Controllers
                 var expenseCategories = await expenseCategoryRepository.GetAllExpenseCategoriesAsync();
                 var response = new List<ExpenseCategoryDto>();
 
-                foreach(var expenseCategory in expenseCategories)
+                foreach (var expenseCategory in expenseCategories)
                 {
                     response.Add(new ExpenseCategoryDto(expenseCategory));
                 }
                 return Ok(response);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
@@ -72,14 +72,39 @@ namespace FinanceTracker.API.Controllers
                 ExpenseCategory? response = await expenseCategoryRepository.GetExpenseCategoryByIdAsync(id);
 
                 if (response == null)
-                    return null;
+                    return NotFound();
 
 
                 return Ok(new ExpenseCategoryDto(response));
             }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> EditExpenseCategory(Guid id, EditExpenseCategoryRequestDto request)
+        {
+                var expenseCategory = new ExpenseCategory
+                {
+                    ExpenseCategoryId = id,
+                    CategoryExpenseName = request.CategoryExpenseName
+                };
+            try
+            {
+                var response = await expenseCategoryRepository.EditExpenseCategory(expenseCategory);
+
+                if (response == null)
+                    return NotFound();
+
+                return Ok(new ExpenseCategoryDto(response));
+            }
+
             catch(Exception e)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
     }

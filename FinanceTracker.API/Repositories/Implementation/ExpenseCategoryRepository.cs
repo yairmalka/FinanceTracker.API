@@ -1,5 +1,6 @@
 ﻿using FinanceTracker.API.Data;
 using FinanceTracker.API.Models.Domain;
+using FinanceTracker.API.Models.DTO;
 using FinanceTracker.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,21 @@ namespace FinanceTracker.API.Repositories.Implementation
             await dbContext.SaveChangesAsync();
             return expenseCategory;
         }
+    
+        async Task<ExpenseCategory?> IExpenseCategoryRepository.EditExpenseCategory(ExpenseCategory expenseCategory)
+        {
+            var expenseCategoryToEdit = await dbContext.ExpenseCategories.FirstOrDefaultAsync(ec => ec.ExpenseCategoryId == expenseCategory.ExpenseCategoryId);
+
+            if (expenseCategoryToEdit == null)
+                return null;
+
+            dbContext.Entry(expenseCategoryToEdit).CurrentValues.SetValues(expenseCategory);
+
+            await dbContext.SaveChangesAsync();
+
+            return expenseCategoryToEdit;
+        }
+    
 
         async Task<IEnumerable<ExpenseCategory>> IExpenseCategoryRepository.GetAllExpenseCategoriesAsync()
         {

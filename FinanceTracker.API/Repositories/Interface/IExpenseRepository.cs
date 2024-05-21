@@ -8,5 +8,6 @@ namespace FinanceTracker.API.Repositories.Interface
         Task<Expense> CreateAsync(Expense expense);
         Task<IEnumerable<Expense>> GetAllExpensesAsync();
         Task<Expense?> GetExpenseByIdAsync(Guid id);
+        Task<Expense?> EditExpense(Expense expense);
     }
 }

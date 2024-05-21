@@ -9,8 +9,8 @@ namespace FinanceTracker.API.Models.Domain
         [Key]
         public Guid ExpenseId { get; set; }
         public Guid UserId { get; set; }
-        [ForeignKey("ExpenseCategoryId")]
         public Guid ExpenseCategoryId { get; set; }
+        [ForeignKey("ExpenseCategoryId")]
         public ExpenseCategory ExpenseCategory { get; set; }
         public DateTime DateOfExpense { get; set; }
         public decimal Amount {  get; set; }
@@ -20,5 +20,5 @@ namespace FinanceTracker.API.Models.Domain
 
     }
 
- 
+    
 }

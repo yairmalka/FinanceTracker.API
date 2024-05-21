@@ -4,6 +4,7 @@ using FinanceTracker.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinanceTracker.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240521081435_fixing Expense foreign Key")]
+    partial class fixingExpenseforeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,8 +86,14 @@ namespace FinanceTracker.API.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid?>("CategoryExpenseName")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("DateReceived")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ExpenseCategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Frequency")
                         .IsRequired()
@@ -110,6 +119,8 @@ namespace FinanceTracker.API.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("IncomeId");
+
+                    b.HasIndex("CategoryExpenseName");
 
                     b.ToTable("Incomes");
                 });
@@ -147,6 +158,15 @@ namespace FinanceTracker.API.Migrations
                         .IsRequired();
 
                     b.Navigation("ExpenseCategory");
+                });
+
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Income", b =>
+                {
+                    b.HasOne("FinanceTracker.API.Models.Domain.ExpenseCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryExpenseName");
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

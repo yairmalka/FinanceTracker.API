@@ -12,6 +12,18 @@ namespace FinanceTracker.API.Repositories.Implementation
         {
             this.dbContext = dbContext;
         }
+
+        public async Task<SavingGoal?> EditSavingGoal(SavingGoal savingGoal)
+        {
+            var savingGoalToEdit = await dbContext.SavingGoals.FirstOrDefaultAsync(s => s.GoalId == savingGoal.GoalId);
+            if (savingGoalToEdit == null)
+                return null;
+
+           dbContext.SavingGoals.Entry(savingGoalToEdit).CurrentValues.SetValues(savingGoal);
+            await dbContext.SaveChangesAsync();
+            return savingGoal;
+        }
+
         async Task<SavingGoal> ISavingGoalRepository.AddSavingGoalAsync(SavingGoal savingGoal)
         {
             await dbContext.SavingGoals.AddAsync(savingGoal);

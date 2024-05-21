@@ -30,5 +30,17 @@ namespace FinanceTracker.API.Repositories.Implementation
         {
             return await dbContext.Expenses.FirstOrDefaultAsync(e => e.ExpenseId == id);
         }
+
+        public async Task<Expense?> EditExpense(Expense expense)
+        {
+            var expenseToEdit = await dbContext.Expenses.FirstOrDefaultAsync(e => e.ExpenseId == expense.ExpenseId);
+
+            if (expenseToEdit == null)
+                return null;
+
+            dbContext.Entry(expenseToEdit).CurrentValues.SetValues(expense);
+            await dbContext.SaveChangesAsync();
+            return expense;
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace FinanceTracker.API.Repositories.Interface
         Task<IEnumerable<SavingGoal>> GetAllSavingGoalAsync();
 
         Task<SavingGoal?> GetSavingGoalByIdAsync(Guid id);
+        Task<SavingGoal?> EditSavingGoal(SavingGoal savingGoal);
     }
 }

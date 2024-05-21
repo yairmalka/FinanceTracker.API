@@ -9,7 +9,6 @@ namespace FinanceTracker.API.Models.DTO
         public decimal Amount { get; set; }
         public string Frequency { get; set; }
         public DateTime DateReceived { get; set; }
-        public string Category { get; set; }
         public string PaymentMethod { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }
@@ -22,7 +21,6 @@ namespace FinanceTracker.API.Models.DTO
             Amount = income.Amount;
             Frequency = income.Frequency;
             DateReceived = income.DateReceived;
-            Category = income.Category;
             PaymentMethod = income.PaymentMethod;
             Status = income.Status;
             Notes = income.Notes;

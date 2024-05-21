@@ -1,13 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using FinanceTracker.API.Models.Domain;
 
-namespace FinanceTracker.API.Models.Domain
+namespace FinanceTracker.API.Models.DTO
 {
-    public class Income
+    public class EditIncomeRequestDto
     {
-        [Key]
-        public Guid IncomeId { get; set; }
-        public Guid UserId { get; set; }
         public string Source { get; set; }
         public decimal Amount { get; set; }
         public string Frequency { get; set; }
@@ -15,6 +11,6 @@ namespace FinanceTracker.API.Models.Domain
         public string PaymentMethod { get; set; }
         public string Status { get; set; }
         public string Notes { get; set; }
-    }
 
+    }
 }

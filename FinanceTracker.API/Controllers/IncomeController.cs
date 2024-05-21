@@ -1,5 +1,6 @@
 ﻿using FinanceTracker.API.Models.Domain;
 using FinanceTracker.API.Models.DTO;
+using FinanceTracker.API.Repositories.Implementation;
 using FinanceTracker.API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,6 @@ namespace FinanceTracker.API.Controllers
                 Amount = request.Amount,
                 Frequency = request.Frequency,
                 DateReceived = request.DateReceived,
-                Category = request.Category,
                 PaymentMethod = request.PaymentMethod,
                 Status = request.Status,
                 Notes = request.Notes
@@ -76,7 +76,7 @@ namespace FinanceTracker.API.Controllers
                 Income? response = await incomeRepository.GetIncomeByIdAsync(id);
 
                 if (response == null)
-                    return null;
+                    return NotFound();
 
                 return Ok(new IncomeDto(response));
             }
@@ -85,5 +85,32 @@ namespace FinanceTracker.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> EditIncome(Guid id, EditIncomeRequestDto request)
+        {
+            var income = new Income
+            {
+                IncomeId = id,
+                Source = request.Source,
+                Amount = request.Amount,
+                Frequency = request.Frequency,
+                DateReceived = request.DateReceived,
+                PaymentMethod = request.PaymentMethod,
+                Status = request.Status,
+                Notes = request.Notes
+            };
+
+            income = await incomeRepository.EditIncome(income);
+
+            if (income == null)
+                return NotFound();
+
+            return Ok(new IncomeDto(income));
     }
+
+    }
+
+
 }

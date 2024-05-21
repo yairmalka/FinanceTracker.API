@@ -8,5 +8,6 @@ namespace FinanceTracker.API.Repositories.Interface
         Task<IEnumerable<Income>> GetAllIncomesAsync();
 
         Task<Income?> GetIncomeByIdAsync(Guid id);
+        Task<Income?> EditIncome(Income income);
     }
 }

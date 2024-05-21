@@ -21,12 +21,24 @@ namespace FinanceTracker.API.Repositories.Implementation
             return income;
         }
 
-        async Task<IEnumerable<Income>> IIncomeRepository.GetAllIncomesAsync()
+        public async Task<Income?> EditIncome(Income income)
+        {
+            var incomeToEdit = await dbContext.Incomes.FirstOrDefaultAsync(i => i.IncomeId == income.IncomeId);
+            if (incomeToEdit == null)
+                return null;
+
+            dbContext.Incomes.Entry(incomeToEdit).CurrentValues.SetValues(income);
+            await dbContext.SaveChangesAsync();
+
+            return income;
+        }
+
+        public async Task<IEnumerable<Income>> GetAllIncomesAsync()
         {
             return await dbContext.Incomes.ToListAsync();
         }
 
-        async Task<Income?> IIncomeRepository.GetIncomeByIdAsync(Guid id)
+        public async Task<Income?> GetIncomeByIdAsync(Guid id)
         {
             return await dbContext.Incomes.FirstOrDefaultAsync(i => i.IncomeId == id);
         }

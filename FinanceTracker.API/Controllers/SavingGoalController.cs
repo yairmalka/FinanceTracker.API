@@ -30,7 +30,8 @@ namespace FinanceTracker.API.Controllers
                 }
 
                 return Ok(savingGoals);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
@@ -48,16 +49,16 @@ namespace FinanceTracker.API.Controllers
                 CurrentAmount = request.CurrentAmount,
                 TargetDate = request.TargetDate
             };
-        
+
             try
             {
-               await savingGoalRepository.AddSavingGoalAsync(savingGoal);
+                await savingGoalRepository.AddSavingGoalAsync(savingGoal);
                 var savingGoalDtoResponse = new SavingGoalDto(savingGoal);
 
                 return Created("api/income/" + savingGoalDtoResponse.GoalId, savingGoalDtoResponse);
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
@@ -72,9 +73,41 @@ namespace FinanceTracker.API.Controllers
                 SavingGoal? response = await savingGoalRepository.GetSavingGoalByIdAsync(id);
 
                 if (response == null)
-                    return null;
+                    return NotFound();
 
                 return Ok(new SavingGoalDto(response));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> EditSavingGoal(Guid id, EditSavingGoalRequestDto request)
+        {
+            var savingGoal = new SavingGoal
+            {
+                GoalId = id,
+                GoalName = request.GoalName,
+                TargetAmount = request.TargetAmount,
+                CurrentAmount = request.CurrentAmount,
+                TargetDate = request.TargetDate
+            };
+
+            try
+            {
+                savingGoal = await savingGoalRepository.EditSavingGoal(savingGoal);
+                if (savingGoal == null)
+                    return NotFound();
+
+                return Ok(new SavingGoalDto(savingGoal));
+
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
     }

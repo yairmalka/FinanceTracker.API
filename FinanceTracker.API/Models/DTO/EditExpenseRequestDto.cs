@@ -1,11 +1,9 @@
 ﻿using FinanceTracker.API.Models.Domain;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceTracker.API.Models.DTO
 {
-    public class CreateExpenseRequestDto
+    public class EditExpenseRequestDto
     {
-       // public Guid UserId { get; set; }
         public Guid ExpenseCategoryId { get; set; }
         public DateTime DateOfExpense { get; set; }
         public decimal Amount { get; set; }
