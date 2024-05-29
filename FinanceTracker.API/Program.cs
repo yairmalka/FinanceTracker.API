@@ -34,9 +34,9 @@ builder.Services.AddScoped<IExpenseCategoryRepository, ExpenseCategoryRepository
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<ISavingGoalRepository, SavingGoalRepository>();
 
-builder.Services.AddIdentityCore<IdentityUser>()
+builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<IdentityRole>()
-    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("FinanceTracker")
+    .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("FinanceTracker")
     .AddEntityFrameworkStores<AuthDbContext>()
     .AddDefaultTokenProviders();
 
@@ -66,9 +66,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-
-var app = builder.Build();
+    var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -83,5 +81,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var repo = services.GetRequiredService<IExpenseCategoryRepository>();
+
+    await repo.SeedExpenseCategoriesAsync();
+}
 
 app.Run();

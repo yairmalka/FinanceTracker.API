@@ -45,6 +45,7 @@ namespace FinanceTracker.API.Controllers
             var savingGoal = new SavingGoal
             {
                 GoalName = request.GoalName,
+                UserId = request.UserId,
                 TargetAmount = request.TargetAmount,
                 CurrentAmount = request.CurrentAmount,
                 TargetDate = request.TargetDate

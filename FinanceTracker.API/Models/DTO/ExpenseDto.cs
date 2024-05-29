@@ -7,8 +7,7 @@ namespace FinanceTracker.API.Models.DTO
     public class ExpenseDto
     {
         public Guid ExpenseId { get; set; }
-        //public Guid UserId { get; set; }
-        [ForeignKey("ExpenseCategoryId")]
+        public string UserId { get; set; }
         public Guid ExpenseCategoryId { get; set; }
         public ExpenseCategory ExpenseCategory { get; set; }
         public DateTime DateOfExpense { get; set; }
@@ -23,6 +22,7 @@ namespace FinanceTracker.API.Models.DTO
         public ExpenseDto(Expense expense)
         {
             ExpenseId = expense.ExpenseId;
+            UserId = expense.UserId;
             DateOfExpense = expense.DateOfExpense;
             Amount = expense.Amount;
             ReceiptImageUrl = expense.ReceiptImageUrl;

@@ -1,4 +1,5 @@
-﻿using FinanceTracker.API.Models.DTO;
+﻿using FinanceTracker.API.Models.Domain;
+using FinanceTracker.API.Models.DTO;
 using FinanceTracker.API.Repositories.Implementation;
 using FinanceTracker.API.Repositories.Interface;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +14,10 @@ namespace FinanceTracker.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly ITokenRepository tokenRepository;
 
-        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
+        public AuthController(UserManager<ApplicationUser> userManager, ITokenRepository tokenRepository)
         {
             this.userManager = userManager;
             this.tokenRepository = tokenRepository;
@@ -59,10 +60,12 @@ namespace FinanceTracker.API.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
         {
             //Create the identityUser object
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 UserName = request.Email?.Trim(),
-                Email = request.Email?.Trim()
+                Email = request.Email?.Trim(),
+                FirstName = request.FirstName?.Trim(),
+                LastName = request.LastName?.Trim()
             };
             // Create User
             var identityResult = await userManager.CreateAsync(user, request.Password);

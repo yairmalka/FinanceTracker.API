@@ -1,4 +1,5 @@
-﻿using FinanceTracker.API.Repositories.Interface;
+﻿using FinanceTracker.API.Models.Domain;
+using FinanceTracker.API.Repositories.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,7 +16,7 @@ namespace FinanceTracker.API.Repositories.Implementation
         {
             this.configuration = configuration;
         }
-        public string CreateJwtToken(IdentityUser user, List<string> roles)
+        public string CreateJwtToken(ApplicationUser user, List<string> roles)
         {
             // Create Claims:
             var claims = new List<Claim>

@@ -10,5 +10,6 @@ namespace FinanceTracker.API.Repositories.Interface
         Task<IEnumerable<ExpenseCategory>> GetAllExpenseCategoriesAsync();
         Task<ExpenseCategory?> GetExpenseCategoryByIdAsync(Guid id);
         Task<ExpenseCategory?> EditExpenseCategory(ExpenseCategory expenseCategory);
+        Task<IEnumerable<ExpenseCategory>> SeedExpenseCategoriesAsync();
     }
 }

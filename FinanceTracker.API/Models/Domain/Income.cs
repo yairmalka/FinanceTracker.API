@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FinanceTracker.API.Models.Domain
@@ -7,7 +8,10 @@ namespace FinanceTracker.API.Models.Domain
     {
         [Key]
         public Guid IncomeId { get; set; }
-        public Guid UserId { get; set; }
+
+        public string UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual ApplicationUser User { get; set; }
         public string Source { get; set; }
         public decimal Amount { get; set; }
         public string Frequency { get; set; }

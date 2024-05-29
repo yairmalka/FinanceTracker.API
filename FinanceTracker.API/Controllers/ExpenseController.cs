@@ -28,6 +28,7 @@ namespace FinanceTracker.API.Controllers
             var expense = new Expense
             {
                 ExpenseCategoryId = request.ExpenseCategoryId,
+                UserId = request.UserId,
                 DateOfExpense = request.DateOfExpense,
                 Amount = request.Amount,
                 ReceiptImageUrl = request.ReceiptImageUrl,

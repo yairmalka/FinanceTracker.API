@@ -1,6 +1,8 @@
-﻿using FinanceTracker.API.Models.Domain;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
+using FinanceTracker.API.Models.Domain;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace FinanceTracker.API.Data
 {
@@ -15,9 +17,6 @@ namespace FinanceTracker.API.Data
         public DbSet<Income> Incomes { get; set; }
         public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
         public DbSet<SavingGoal> SavingGoals { get; set; }
-
-
-
 
     }
 }

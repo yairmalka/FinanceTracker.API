@@ -5,7 +5,7 @@ namespace FinanceTracker.API.Models.DTO
 {
     public class CreateExpenseRequestDto
     {
-       // public Guid UserId { get; set; }
+        public string UserId { get; set; }
         public Guid ExpenseCategoryId { get; set; }
         public DateTime DateOfExpense { get; set; }
         public decimal Amount { get; set; }

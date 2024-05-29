@@ -26,6 +26,7 @@ namespace FinanceTracker.API.Controllers
 
             Income income = new Income
             {
+                UserId = request.UserId,
                 Source = request.Source,
                 Amount = request.Amount,
                 Frequency = request.Frequency,
