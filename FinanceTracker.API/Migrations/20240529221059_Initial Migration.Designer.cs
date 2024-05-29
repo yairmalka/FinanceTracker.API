@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinanceTracker.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240529091541_Initial Migration2")]
-    partial class InitialMigration2
+    [Migration("20240529221059_Initial Migration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -183,6 +183,78 @@ namespace FinanceTracker.API.Migrations
                     b.ToTable("Incomes");
                 });
 
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Instrument", b =>
+                {
+                    b.Property<Guid>("InstrumentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("CurrentPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("TickerSymbol")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("InstrumentId");
+
+                    b.ToTable("Assets");
+                });
+
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Order", b =>
+                {
+                    b.Property<Guid>("OrderTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("InstrumentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("LimitPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("OrderAction")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderType")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("OrderTypeId");
+
+                    b.HasIndex("InstrumentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Portfolio", b =>
+                {
+                    b.Property<Guid>("PortfolioId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("TotalValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PortfolioId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Portfolios");
+                });
+
             modelBuilder.Entity("FinanceTracker.API.Models.Domain.SavingGoal", b =>
                 {
                     b.Property<Guid>("GoalId")
@@ -213,6 +285,55 @@ namespace FinanceTracker.API.Migrations
                     b.ToTable("SavingGoals");
                 });
 
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Transaction", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("InstrumentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PortfolioId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Quantity")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TransactionType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("fees")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("InstrumentId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("PortfolioId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
+                });
+
             modelBuilder.Entity("FinanceTracker.API.Models.Domain.Expense", b =>
                 {
                     b.HasOne("FinanceTracker.API.Models.Domain.ExpenseCategory", "ExpenseCategory")
@@ -222,7 +343,7 @@ namespace FinanceTracker.API.Migrations
                         .IsRequired();
 
                     b.HasOne("FinanceTracker.API.Models.Domain.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Expenses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -235,7 +356,37 @@ namespace FinanceTracker.API.Migrations
             modelBuilder.Entity("FinanceTracker.API.Models.Domain.Income", b =>
                 {
                     b.HasOne("FinanceTracker.API.Models.Domain.ApplicationUser", "User")
+                        .WithMany("Incomes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Order", b =>
+                {
+                    b.HasOne("FinanceTracker.API.Models.Domain.Instrument", "Instrument")
                         .WithMany()
+                        .HasForeignKey("InstrumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinanceTracker.API.Models.Domain.ApplicationUser", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instrument");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Portfolio", b =>
+                {
+                    b.HasOne("FinanceTracker.API.Models.Domain.ApplicationUser", "User")
+                        .WithMany("Portfolios")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -246,12 +397,60 @@ namespace FinanceTracker.API.Migrations
             modelBuilder.Entity("FinanceTracker.API.Models.Domain.SavingGoal", b =>
                 {
                     b.HasOne("FinanceTracker.API.Models.Domain.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("SavingGoals")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.Transaction", b =>
+                {
+                    b.HasOne("FinanceTracker.API.Models.Domain.Instrument", "Instrument")
+                        .WithMany()
+                        .HasForeignKey("InstrumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FinanceTracker.API.Models.Domain.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FinanceTracker.API.Models.Domain.Portfolio", "Portfolio")
+                        .WithMany()
+                        .HasForeignKey("PortfolioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FinanceTracker.API.Models.Domain.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Instrument");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Portfolio");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FinanceTracker.API.Models.Domain.ApplicationUser", b =>
+                {
+                    b.Navigation("Expenses");
+
+                    b.Navigation("Incomes");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("Portfolios");
+
+                    b.Navigation("SavingGoals");
                 });
 
             modelBuilder.Entity("FinanceTracker.API.Models.Domain.ExpenseCategory", b =>
