@@ -11,6 +11,7 @@ namespace FinanceTracker.API.Models.Domain
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
         public decimal TotalValue { get; set; }
+        public decimal AvailableCash {  get; set; } 
 
     }
 }

@@ -17,7 +17,7 @@ namespace FinanceTracker.API.Models.Domain
     public class Order
     {
     [Key]
-    public Guid OrderTypeId { get; set; }
+    public Guid OrderId { get; set; }
     public string UserId { get; set; }
     [ForeignKey("UserId")]
     public virtual ApplicationUser User { get; set; }

@@ -21,6 +21,10 @@ namespace FinanceTracker.API.Data
         public DbSet<Instrument> Assets { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<Instrument> Instruments { get; set; }
+        public DbSet<Portfolio_Instrument> Portfolios_Instruments { get; set; }
 
     }
 }
