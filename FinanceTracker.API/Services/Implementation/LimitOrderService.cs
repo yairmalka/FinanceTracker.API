@@ -4,18 +4,23 @@ namespace FinanceTracker.API.Services.Implementation
 {
     public class LimitOrderService : BackgroundService
     {
-        private readonly IOrderService orderService;
+        private readonly IServiceProvider serviceProvider;
 
-        public LimitOrderService(IOrderService orderService)
+        public LimitOrderService(IServiceProvider serviceProvider)
         {
-            this.orderService = orderService;
+            this.serviceProvider = serviceProvider;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await orderService.CheckLimitOrders(stoppingToken);
+                using(var scope = serviceProvider.CreateScope())
+                {
+                    var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
+                    await orderService.CheckLimitOrders(stoppingToken);
+                }
+                
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); //check every minute
             }
         }
