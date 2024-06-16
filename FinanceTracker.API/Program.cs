@@ -99,9 +99,13 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var repo = services.GetRequiredService<IExpenseCategoryRepository>();
+    var expenseCategoryRepo = services.GetRequiredService<IExpenseCategoryRepository>();
 
-    await repo.SeedExpenseCategoriesAsync();
+    await expenseCategoryRepo.SeedExpenseCategoriesAsync();
+
+    var instrumentRepo = services.GetRequiredService<IInstrumentRepository>();
+    string instrumentsCsvFilePath = builder.Configuration["AppSettings:InstrumentsCsvFilePath"];
+    await instrumentRepo.SeedInstrumentsFromCsvAsync(instrumentsCsvFilePath);
 }
 
 app.Run();

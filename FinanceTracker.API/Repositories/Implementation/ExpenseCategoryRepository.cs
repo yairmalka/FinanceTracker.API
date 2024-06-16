@@ -49,7 +49,11 @@ namespace FinanceTracker.API.Repositories.Implementation
 
         public async Task<IEnumerable<ExpenseCategory>> SeedExpenseCategoriesAsync()
         {
-            var expenseCategories = new List<ExpenseCategory>
+            if(!await dbContext.ExpenseCategories.AnyAsync())
+            {
+
+            }
+                var expenseCategories = new List<ExpenseCategory>
             {
                 new ExpenseCategory { CategoryExpenseName = "Groceries"},
                 new ExpenseCategory { CategoryExpenseName = "Utilities"},

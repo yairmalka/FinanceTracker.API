@@ -1,17 +1,12 @@
-﻿namespace FinanceTracker.API.Models.Domain
+﻿namespace FinanceTracker.API.Models.DTO
 {
-    public class InstrumentDto
+    public class InstrumentCsvRecordDto
     {
-        public Guid InstrumentId { get; set; }
         public string TickerSymbol { get; set; }
         public string Name { get; set; }
-        public decimal CurrentPrice { get; set; }
-
+        public string CurrentPrice { get; set; } //this is a string because it includes the '$' sign
         public string Country { get; set; }
         public string Sector { get; set; }
         public string Industry { get; set; }
-        public string Currency { get; set; }
-
     }
 }
-
