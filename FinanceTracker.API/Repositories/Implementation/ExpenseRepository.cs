@@ -2,6 +2,7 @@
 using FinanceTracker.API.Models.Domain;
 using FinanceTracker.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace FinanceTracker.API.Repositories.Implementation
 {
@@ -21,10 +22,6 @@ namespace FinanceTracker.API.Repositories.Implementation
             return expense;
         }
 
-        async Task<IEnumerable<Expense>> IExpenseRepository.GetAllExpensesAsync()
-        {
-            return await dbContext.Expenses.ToListAsync();
-        }
 
         public async Task<Expense?> GetExpenseByIdAsync(Guid id)
         {
@@ -41,6 +38,11 @@ namespace FinanceTracker.API.Repositories.Implementation
             dbContext.Entry(expenseToEdit).CurrentValues.SetValues(expense);
             await dbContext.SaveChangesAsync();
             return expense;
+        }
+
+        public async Task<IEnumerable<Expense>> GetAllExpensesAsync()
+        {
+            return await dbContext.Expenses.ToListAsync();
         }
     }
 }

@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static FinanceTracker.API.Models.Enums.OrderEnums;
 
 namespace FinanceTracker.API.Models.Domain
 {
-    public enum TransactionType
-    {
-        Buy,
-        Sell
-    }
     public class Transaction
     {
         [Key]
@@ -27,7 +23,7 @@ namespace FinanceTracker.API.Models.Domain
         [ForeignKey("OrderId")]
         [DeleteBehavior(DeleteBehavior.Restrict)]
         public virtual Order Order { get; set; }
-        public TransactionType TransactionType { get; set; }
+        public OrderAction OrderAction { get; set; }
         public DateTime Date { get; set; }
         public decimal Quantity { get; set; }
         public decimal Price { get; set; }

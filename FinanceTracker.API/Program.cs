@@ -2,6 +2,8 @@ using FinanceTracker.API.Data;
 using FinanceTracker.API.Models.Domain;
 using FinanceTracker.API.Repositories.Implementation;
 using FinanceTracker.API.Repositories.Interface;
+using FinanceTracker.API.Services.Implementation;
+using FinanceTracker.API.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +42,10 @@ builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IPortfolio_InstrumentRepository, Portfolio_InstrumentRepository>();
 
+//services di:
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IInstrumentService, InstrumentService>();
+builder.Services.AddHostedService<LimitOrderService>(); // register the backGround service
 
 
 builder.Services.AddIdentityCore<ApplicationUser>()

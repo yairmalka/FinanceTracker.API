@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static FinanceTracker.API.Models.Enums.OrderEnums;
 
 namespace FinanceTracker.API.Models.Domain
 {
