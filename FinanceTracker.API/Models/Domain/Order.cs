@@ -20,6 +20,7 @@ namespace FinanceTracker.API.Models.Domain
     public OrderType OrderType { get; set; }
     public OrderStatus OrderStatus { get; set; }
     public decimal LimitPrice { get; set; }
+    [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
     public decimal Quantity { get; set; }
     public DateTime CreatedAt { get; set; }
     public string StatusMessage { get; set; }

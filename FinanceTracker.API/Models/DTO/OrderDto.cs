@@ -13,6 +13,7 @@ namespace FinanceTracker.API.Models.Domain
         public OrderAction OrderAction { get; set; } //Enum of Buy/Sell
         public OrderType OrderType { get; set; } //Enum of Limit/Market
         public decimal LimitPrice { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
         public decimal Quantity { get; set; }
     }
 

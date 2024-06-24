@@ -33,12 +33,6 @@ namespace FinanceTracker.API.Services.Implementation
         }
         public async Task<OrderResonseDto> PlaceAnOrder(Order order)
         {
-            if(order.Quantity == 0)
-                throw new DivideByZeroException("Quaintity is 0, Order can't be completed.");
-
-            if (order.Quantity < 0)
-                throw new InvalidOperationException("Quantity must be positive.");
-
             var instrumentData = await instrumentService.GetInstrumentDataByTickerSymbol(order.TickerSymbol);
             if (instrumentData == null || !instrumentData.ContainsKey("RegularMarketPrice"))
             {
@@ -52,26 +46,27 @@ namespace FinanceTracker.API.Services.Implementation
             {
                 throw new InvalidOperationException("Portfolio not found");
             }
+            decimal totalCost = order.Quantity * (decimal)regularMarketPrice;
 
-            if(order.OrderAction == OrderAction.Buy)
+            if (order.OrderAction == OrderAction.Buy)
             {
-                decimal totalCost = order.Quantity * (decimal)regularMarketPrice;
-
-                if(order.OrderType == OrderType.Market)
+                if(order.OrderType == OrderType.Market ||
+                    (order.OrderType == OrderType.Limit && order.LimitPrice >= (decimal)regularMarketPrice)) //limit higher or equal to the regularMarketPrice considered as market order
                 {
                    return await ExecuteOrder(order, totalCost);
                 }
-
-                else if(order.OrderType == OrderType.Limit)
-                {
-                    if(order.LimitPrice <= (decimal)regularMarketPrice)
-                    {
-                        return await ExecuteOrder(order, totalCost);
-                    }
-                }
             }
 
-            //FIX IT:
+            else if(order.OrderAction == OrderAction.Sell)
+            {
+                if(order.OrderType == OrderType.Market || 
+                    (order.OrderType == OrderType.Limit && order.LimitPrice <= (decimal)regularMarketPrice)) //limit lower or equal to the regularMarketPrice considered as market order
+                {
+                    return await ExecuteOrder(order, totalCost);
+                }
+            }
+             
+            //FIX IT: return some status message that the order is sell limit or buy limit, not completed yet
             return new OrderResonseDto();
 
         }
@@ -130,6 +125,11 @@ namespace FinanceTracker.API.Services.Implementation
                 else if (quantityToSell < order.Quantity)
                 {
                         throw new InvalidOperationException("Insufficient quantity in your portfolio to complete the order.");
+                }
+
+                else if(quantityToSell >= order.Quantity)
+                {
+                    portfolio.AvailableCash += totalCost;
                 }
             }
 

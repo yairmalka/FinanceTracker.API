@@ -48,20 +48,16 @@ namespace FinanceTracker.API.Controllers
 
                 var orderResponseDto = await orderService.PlaceAnOrder(order);
                 return Ok(orderResponseDto);
-            
 
-            } catch (InvalidOperationException ex) {
-                order.StatusMessage = ex.Message;
-                await orderRepository.CancelOrder(order);
-                return BadRequest(ex.Message);
 
-            } catch (DivideByZeroException ex)
+            }
+            catch (InvalidOperationException ex)
             {
                 order.StatusMessage = ex.Message;
                 await orderRepository.CancelOrder(order);
                 return BadRequest(ex.Message);
-            }
 
+            }
         }
 
 
