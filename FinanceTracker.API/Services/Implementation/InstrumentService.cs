@@ -6,7 +6,7 @@ namespace FinanceTracker.API.Services.Implementation
 {
     public class InstrumentService: IInstrumentService
     {
-        public async Task<Dictionary<string, object>> GetInstrumentDataByName(string tickerSymbol)
+        public async Task<Dictionary<string, object>> GetInstrumentDataByTickerSymbol(string tickerSymbol)
         {
             try
             {

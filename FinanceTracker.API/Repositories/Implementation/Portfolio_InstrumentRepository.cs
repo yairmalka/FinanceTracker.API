@@ -14,7 +14,7 @@ namespace FinanceTracker.API.Repositories.Implementation
         {
             this.dbContext = dbContext;
         }
-        public async Task<Portfolio_Instrument> CreatePortfolio_InstrumentEntry(Portfolio_Instrument portfolio_instrument, OrderAction orderAction)
+        public async Task<Portfolio_Instrument?> CreatePortfolio_InstrumentEntry(Portfolio_Instrument portfolio_instrument, OrderAction orderAction)
         {
             var existingEntry = await dbContext.Portfolios_Instruments
                 .FirstOrDefaultAsync(pi => pi.PortfolioId == portfolio_instrument.PortfolioId && pi.InstrumentId == portfolio_instrument.InstrumentId);
@@ -31,8 +31,6 @@ namespace FinanceTracker.API.Repositories.Implementation
             {
                 await dbContext.Portfolios_Instruments.AddAsync(portfolio_instrument);
             }
-
-            await dbContext.SaveChangesAsync();
 
             return portfolio_instrument;
         }

@@ -1,5 +1,6 @@
 ﻿using FinanceTracker.API.Data;
 using FinanceTracker.API.Models.Domain;
+using FinanceTracker.API.Models.DTO;
 using FinanceTracker.API.Repositories.Implementation;
 using FinanceTracker.API.Repositories.Interface;
 using FinanceTracker.API.Services.Interface;
@@ -30,17 +31,23 @@ namespace FinanceTracker.API.Services.Implementation
             this.transactionRepository = transactionRepository;
             this.dbContext = dbContext;
         }
-        public async Task<Order> PlaceAnOrder(Order order)
+        public async Task<OrderResonseDto> PlaceAnOrder(Order order)
         {
-            // I think it won't work the order.Instrument.TickerSymbol but lets give it a try
-            var instrumentData = await instrumentService.GetInstrumentDataByName(order.Instrument.TickerSymbol);
+            if(order.Quantity == 0)
+                throw new DivideByZeroException("Quaintity is 0, Order can't be completed.");
+
+            if (order.Quantity < 0)
+                throw new InvalidOperationException("Quantity must be positive.");
+
+            var instrumentData = await instrumentService.GetInstrumentDataByTickerSymbol(order.TickerSymbol);
             if (instrumentData == null || !instrumentData.ContainsKey("RegularMarketPrice"))
             {
-                throw new InvalidOperationException("Instrument not found");
+                throw new InvalidOperationException("Instrument not found.");
             }
-            double regularMarketPrice = (double)instrumentData["RegularMarketPrice"];
-            Portfolio? portfolio = await portfolioRepository.GetPortfolioByUserId(order.UserId);
 
+            double regularMarketPrice = (double)instrumentData["RegularMarketPrice"];
+
+            Portfolio? portfolio = await portfolioRepository.GetPortfolioByUserId(order.UserId);
             if (portfolio == null)
             {
                 throw new InvalidOperationException("Portfolio not found");
@@ -52,48 +59,52 @@ namespace FinanceTracker.API.Services.Implementation
 
                 if(order.OrderType == OrderType.Market)
                 {
-                    await ExecuteOrder(order, totalCost);
+                   return await ExecuteOrder(order, totalCost);
                 }
 
                 else if(order.OrderType == OrderType.Limit)
                 {
                     if(order.LimitPrice <= (decimal)regularMarketPrice)
                     {
-                        await ExecuteOrder(order, totalCost);
+                        return await ExecuteOrder(order, totalCost);
                     }
                 }
             }
-            //FIX IT: return something else rather than the order, please think about what should be returned later on.
-            return order;
+
+            //FIX IT:
+            return new OrderResonseDto();
+
         }
 
-        public async Task CheckLimitOrders(CancellationToken cancellationToken)
+        public async Task<OrderResonseDto> CheckLimitOrders(CancellationToken cancellationToken)
         {
             var limitOrders = await GetPendingLimitOrders();
             foreach(var order in limitOrders)
             {
-                var instrumentData = await instrumentService.GetInstrumentDataByName(order.Instrument.TickerSymbol);
+                var instrumentData = await instrumentService.GetInstrumentDataByTickerSymbol(order.TickerSymbol);
                 if(instrumentData != null && instrumentData.ContainsKey("RegularMarketPrice"))
                 {
                     double regularMarketPrice = (double)instrumentData["RegularMarketPrice"];
                     if(order.OrderAction == OrderAction.Buy && regularMarketPrice <= (double)order.LimitPrice)
                     {
-                        await ExecuteOrder(order, (decimal)regularMarketPrice);
+                        return await ExecuteOrder(order, (decimal)regularMarketPrice);
                     }
 
                     else if(order.OrderAction == OrderAction.Sell && regularMarketPrice >= (double)order.LimitPrice)
                     {
-                        await ExecuteOrder(order, (decimal)regularMarketPrice);
+                        return await ExecuteOrder(order, (decimal)regularMarketPrice);
                     }
                     if(DateTime.UtcNow - order.CreatedAt > TimeSpan.FromHours(12))
                     {
-                        await CancelOrder(order);
+                        return await CancelOrder(order);
                     }
                 }
             }
+            //FIX IT:
+            return new OrderResonseDto();
         }
 
-        private async Task<Order> ExecuteOrder(Order order, decimal totalCost)
+        private async Task<OrderResonseDto> ExecuteOrder(Order order, decimal totalCost)
         {
             Portfolio? portfolio = await portfolioRepository.GetPortfolioByUserId(order.UserId);
             if (portfolio == null)
@@ -148,12 +159,32 @@ namespace FinanceTracker.API.Services.Implementation
             await orderRepository.CompleteOrder(order);
 
             await dbContext.SaveChangesAsync();
-            return order;
+            
+            return new OrderResonseDto
+            {
+                TickerSymbol = order.TickerSymbol,
+                OrderId = order.OrderId.ToString(),
+                OrderAction = order.OrderAction,
+                OrderType = order.OrderType,
+                OrderStatus = OrderStatus.Completed,
+                SharePrice = (totalCost / order.Quantity),
+                Quantity = order.Quantity,
+                ExecutedAt = DateTime.Now,
+                StatusMessage = "Order completed succesfully."
+            };
         }
 
-        private async Task<Order?> CancelOrder(Order order)
+        private async Task<OrderResonseDto> CancelOrder(Order order)
         {
-            return await orderRepository.CancelOrder(order);
+             await orderRepository.CancelOrder(order);
+            return new OrderResonseDto
+            {
+                TickerSymbol = order.TickerSymbol,
+                OrderId = order.OrderId.ToString(),
+                OrderAction = order.OrderAction,
+                OrderStatus = OrderStatus.Cancelled,
+                StatusMessage = "Order not completed."
+            };
         }
 
         private async Task<IEnumerable<Order?>> GetPendingLimitOrders()

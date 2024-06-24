@@ -45,7 +45,7 @@ builder.Services.AddScoped<IPortfolio_InstrumentRepository, Portfolio_Instrument
 //services di:
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IInstrumentService, InstrumentService>();
-builder.Services.AddHostedService<LimitOrderService>(); // register the backGround service
+builder.Services.AddHostedService<LimitOrderService>(); 
 
 
 builder.Services.AddIdentityCore<ApplicationUser>()

@@ -15,13 +15,14 @@ namespace FinanceTracker.API.Models.Domain
     public Guid InstrumentId {get; set; }
     [ForeignKey("InstrumentId")]
     public virtual Instrument Instrument { get; set; }
+    public string TickerSymbol { get; set; }
     public OrderAction OrderAction {  get; set; } 
     public OrderType OrderType { get; set; }
     public OrderStatus OrderStatus { get; set; }
     public decimal LimitPrice { get; set; }
     public decimal Quantity { get; set; }
-
     public DateTime CreatedAt { get; set; }
+    public string StatusMessage { get; set; }
     }
 
 

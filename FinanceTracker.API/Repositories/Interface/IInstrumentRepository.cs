@@ -8,5 +8,6 @@ namespace FinanceTracker.API.Repositories.Interface
         public Task<Instrument?> GetInstrumentByTickerSymbol(string tickerSymbol);
 
         public Task SeedInstrumentsFromCsvAsync(string csvFilePath);
+
     }
 }

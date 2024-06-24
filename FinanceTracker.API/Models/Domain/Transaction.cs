@@ -8,7 +8,7 @@ namespace FinanceTracker.API.Models.Domain
     public class Transaction
     {
         [Key]
-        public int TransactionId { get; set; }
+        public Guid TransactionId { get; set; }
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }

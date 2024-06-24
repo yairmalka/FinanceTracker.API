@@ -7,7 +7,6 @@ namespace FinanceTracker.API.Models.DTO
 {
     public class TransactionDto
     {
-        public int TransactionId { get; set; }
         public string UserId { get; set; }
 
         public Guid PortfolioId { get; set; }

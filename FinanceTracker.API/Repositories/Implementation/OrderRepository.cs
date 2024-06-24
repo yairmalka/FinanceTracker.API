@@ -16,9 +16,8 @@ namespace FinanceTracker.API.Repositories.Implementation
         }
 
         
-        public async Task<Order?> SaveOrder(Order order)
+        public async Task<Order?> AddNewOrder(Order order)
         {
-            order.OrderStatus = OrderStatus.Pending;
             await dbContext.Orders.AddAsync(order);
             await dbContext.SaveChangesAsync();
             return order;
@@ -26,7 +25,7 @@ namespace FinanceTracker.API.Repositories.Implementation
 
         public async Task<IEnumerable<Order?>> GetPendingLimitOrders()
         {
-         return await dbContext.Orders.Where(o=> o.OrderStatus == OrderStatus.Pending).ToListAsync();
+         return await dbContext.Orders.Where(o=> o.OrderStatus == OrderStatus.Pending && o.OrderType == OrderType.Limit).ToListAsync();
         }
 
         public async Task<Order?> CancelOrder(Order order)
@@ -39,7 +38,8 @@ namespace FinanceTracker.API.Repositories.Implementation
         public async Task<Order?> CompleteOrder(Order order)
         {
             order.OrderStatus = OrderStatus.Completed;
-            //save changes will be togeher with other tables to prevent multiple db accesses.
+            order.StatusMessage = "Completed Successfully.";
+
             return order;
         }
     }
